@@ -29,9 +29,10 @@ function cargarDesdeLocalStorage() {
 
 function renderizarNotas(filtro = '') {
   contenedorNotas.innerHTML = '';
-  const notasFiltradas = notas.filter(nota =>
-    nota.titulo.toLowerCase().includes(filtro.toLowerCase())
-  );
+
+  const notasFiltradas = notas
+    .filter(nota => nota.titulo.toLowerCase().includes(filtro.toLowerCase()))
+    .sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
 
   if (filtro.trim() !== '') {
     resultadoTexto.textContent = `Mostrando resultados para: "${filtro}"`;
@@ -52,16 +53,27 @@ function mostrarEditor(nota = null, index = null) {
   editor.classList.remove('oculto');
   notaActual = index;
 
+  const preview = document.getElementById('colorPreview');
+
   if (nota) {
     tituloNota.value = nota.titulo;
     cuerpoNota.value = nota.contenido;
-    colorNota.value = nota.color || '#ffffff';
+
+    const esHex = /^#[0-9A-F]{6}$/i.test(nota.color);
+    colorNota.value = esHex ? nota.color : '';
+    preview.style.backgroundColor = nota.color || 'rgba(255, 255, 255, 0.07)';
   } else {
     tituloNota.value = '';
     cuerpoNota.value = '';
-    colorNota.value = '#ffffff';
+    colorNota.value = '';
+    preview.style.backgroundColor = 'rgba(255, 255, 255, 0.07)';
   }
 }
+colorNota.addEventListener('input', () => {
+  const preview = document.getElementById('colorPreview');
+  preview.style.backgroundColor = colorNota.value || 'rgba(255, 255, 255, 0.07)';
+});
+
 
 function cerrarEditor() {
   editor.classList.add('oculto');
@@ -69,18 +81,28 @@ function cerrarEditor() {
 }
 
 guardarNota.addEventListener('click', () => {
-  const nuevaNota = {
-    titulo: tituloNota.value.trim(),
-    contenido: cuerpoNota.value.trim(),
-    color: colorNota.value
-  };
+  const titulo = tituloNota.value.trim();
+  const contenido = cuerpoNota.value.trim();
+  const colorElegido = colorNota.value.trim();
 
-  if (!nuevaNota.titulo) {
+  if (!titulo) {
     alert('La nota necesita un título.');
     return;
   }
 
+  // Si el usuario no elige color válido, se aplica el color por defecto
+  const esColorValido = /^#[0-9A-F]{6}$/i.test(colorElegido);
+  const colorFinal = esColorValido ? colorElegido : 'rgba(255, 255, 255, 0.07)';
+
+  const nuevaNota = {
+    titulo,
+    contenido,
+    color: colorFinal,
+    fechaCreacion: new Date().toISOString()
+  };
+
   if (notaActual !== null) {
+    nuevaNota.fechaCreacion = notas[notaActual].fechaCreacion;
     notas[notaActual] = nuevaNota;
   } else {
     notas.push(nuevaNota);
@@ -101,12 +123,8 @@ eliminarNota.addEventListener('click', () => {
 });
 
 cancelarNota.addEventListener('click', cerrarEditor);
-
 botonMas.addEventListener('click', () => mostrarEditor());
-
-buscador.addEventListener('input', () => {
-  renderizarNotas(buscador.value);
-});
+buscador.addEventListener('input', () => renderizarNotas(buscador.value));
 
 // Inicialización
 cargarDesdeLocalStorage();

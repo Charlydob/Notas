@@ -1,10 +1,8 @@
 html, body {
   height: 100%;
-  background: #1e1e1e; /* o el color que uses de fondo */
-  overscroll-behavior: none; /* Opcional, evita elasticidad iOS */
+  overscroll-behavior: none;
 }
 
-/* Reset básico */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -12,14 +10,26 @@ html, body {
 }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
   color: white;
   min-height: 100vh;
+  overflow-x: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('noise.svg');
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Contenedor general */
@@ -29,23 +39,41 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  flex: 1;
+  position: relative;
+  z-index: 1;
 }
 
-/* Buscador y botón "+" */
+/* Zona central */
+.zona-central {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+}
+
+/* Buscador */
 .search-bar {
   display: flex;
   gap: 8px;
-  height: 40px; /* Reducido */
+  align-items: center;
+  height: 40px;
+  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  padding: 4px;
 }
 
 #buscador {
   flex: 1;
-  padding: 14px 20px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 25px;
-  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  background: transparent;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 #buscador::placeholder {
@@ -53,13 +81,13 @@ body {
 }
 
 #botonMas {
-  width: 50px;
-  height: 50px;
-  font-size: 24px;
-  background: transparent;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  background: rgba(255, 255, 255, 0.08);
   color: white;
-  border: 2px solid white;
-  border-radius: 50%;
+  border: none;
+  border-radius: 20px;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -68,7 +96,7 @@ body {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Resultado de búsqueda */
+/* Resultado */
 #resultadoTexto {
   text-align: center;
   color: #aaa;
@@ -77,32 +105,48 @@ body {
 
 /* Lista de notas */
 .lista-notas {
+  max-height: 30vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  padding: 6px 0;
+  scroll-behavior: smooth;
+  position: relative;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);
 }
 
-/* Botones de nota */
+/* Notas */
 .lista-notas button {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.07);
   color: white;
-  border: none;
-  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
   padding: 12px;
-  font-size: 18px;
+  font-size: 17px;
   text-align: left;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.2s;
+  font-weight: 500;
+  animation: fadeInUp 0.3s ease;
 }
 
 .lista-notas button:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
 }
 
-/* Editor de notas */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Editor */
 .editor {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   padding: 20px;
   display: flex;
@@ -117,7 +161,7 @@ body {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 12px;
   font-size: 16px;
   width: 100%;
@@ -125,7 +169,7 @@ body {
 
 .editor textarea {
   resize: vertical;
-  min-height: 150px;
+  min-height: 120px;
 }
 
 .botones-editor {
@@ -139,25 +183,14 @@ body {
   padding: 12px;
   font-size: 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
   transition: background 0.2s;
 }
 
-#guardarNota {
-  background: #bbffbb;
-  color: black;
-}
-
-#eliminarNota {
-  background: #ff4c4c;
-  color: white;
-}
-
-#cancelarNota {
-  background: #888;
-  color: white;
-}
+#guardarNota { background: #bbffbb; color: black; }
+#eliminarNota { background: #ff4c4c; color: white; }
+#cancelarNota { background: #888; color: white; }
 
 .oculto {
   display: none;
@@ -168,33 +201,76 @@ body {
   to { opacity: 1; transform: scale(1); }
 }
 
+/* Responsive */
 @media (max-width: 480px) {
-  .container {
-    padding: 20px;
-  }
+  .container { padding: 20px; }
 
-  #buscador {
-    font-size: 14px;
-    padding: 8px 12px;
-  }
+  #buscador { font-size: 14px; padding: 8px 12px; }
+  #botonMas { width: 36px; height: 36px; font-size: 18px; }
 
-  #botonMas {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-  }
-
-  .editor textarea {
-    min-height: 120px;
-  }
+  .editor textarea { min-height: 100px; }
 
   .botones-editor button {
     font-size: 14px;
     padding: 10px;
   }
+
+  .search-bar {
+    height: auto;
+  }
+
+  #buscador {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  #botonMas {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
 }
-input,
-textarea,
-select {
-  font-size: 16px !important; /* mínimo necesario en iOS para evitar zoom */
+
+/* Prevenir zoom en inputs móviles */
+input, textarea, select {
+  font-size: 16px !important;
+}
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('noise.svg'); /* imagen de ruido o patrón suave */
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+/* Colores por tag */
+.tag-trabajo {
+  background: rgba(0, 128, 255, 0.15);
+  border-left: 4px solid #0090ff;
+}
+
+.tag-personal {
+  background: rgba(255, 165, 0, 0.15);
+  border-left: 4px solid #ffaa00;
+}
+
+.tag-importante {
+  background: rgba(255, 0, 0, 0.15);
+  border-left: 4px solid #ff4444;
+}
+
+.tag-ideas {
+  background: rgba(0, 255, 128, 0.15);
+  border-left: 4px solid #00cc88;
+}
+
+.tag-estudio {
+  background: rgba(200, 0, 255, 0.15);
+  border-left: 4px solid #bb00ff;
+}
+
+/* Si quieres un color base para todo lo que no tenga tag válido */
+.lista-notas button:not([class*="tag-"]) {
+  background: rgba(255, 255, 255, 0.07);
 }

@@ -6,7 +6,7 @@ const resultadoTexto = document.getElementById('resultadoTexto');
 const editor = document.getElementById('editor');
 const tituloNota = document.getElementById('tituloNota');
 const cuerpoNota = document.getElementById('cuerpoNota');
-const comboTags = document.getElementById('comboTags');
+const colorNota = document.getElementById('colorNota');
 const guardarNota = document.getElementById('guardarNota');
 const eliminarNota = document.getElementById('eliminarNota');
 const cancelarNota = document.getElementById('cancelarNota');
@@ -42,6 +42,7 @@ function renderizarNotas(filtro = '') {
   notasFiltradas.forEach((nota, index) => {
     const btn = document.createElement('button');
     btn.textContent = nota.titulo;
+    btn.style.backgroundColor = nota.color || 'rgba(255, 255, 255, 0.07)';
     btn.addEventListener('click', () => mostrarEditor(nota, index));
     contenedorNotas.appendChild(btn);
   });
@@ -54,11 +55,11 @@ function mostrarEditor(nota = null, index = null) {
   if (nota) {
     tituloNota.value = nota.titulo;
     cuerpoNota.value = nota.contenido;
-    comboTags.value = nota.tag || 'Trabajo';
+    colorNota.value = nota.color || '#ffffff';
   } else {
     tituloNota.value = '';
     cuerpoNota.value = '';
-    comboTags.value = 'Trabajo';
+    colorNota.value = '#ffffff';
   }
 }
 
@@ -71,7 +72,7 @@ guardarNota.addEventListener('click', () => {
   const nuevaNota = {
     titulo: tituloNota.value.trim(),
     contenido: cuerpoNota.value.trim(),
-    tag: comboTags.value
+    color: colorNota.value
   };
 
   if (!nuevaNota.titulo) {
@@ -92,12 +93,10 @@ guardarNota.addEventListener('click', () => {
 
 eliminarNota.addEventListener('click', () => {
   if (notaActual !== null) {
-    if (confirm('¿Seguro que querés eliminar esta nota?')) {
-      notas.splice(notaActual, 1);
-      guardarEnLocalStorage();
-      renderizarNotas(buscador.value);
-      cerrarEditor();
-    }
+    notas.splice(notaActual, 1);
+    guardarEnLocalStorage();
+    renderizarNotas(buscador.value);
+    cerrarEditor();
   }
 });
 
@@ -129,3 +128,19 @@ document.addEventListener('touchmove', function (event) {
     event.preventDefault();
   }
 }, { passive: false });
+
+// Escala progresiva en notas según scroll
+contenedorNotas.addEventListener('scroll', () => {
+  const notasBotones = contenedorNotas.querySelectorAll('button');
+  const topCont = contenedorNotas.getBoundingClientRect().top;
+
+  notasBotones.forEach(nota => {
+    const top = nota.getBoundingClientRect().top - topCont;
+    const factor = Math.max(0.75, 1 - top / 500);
+    nota.style.transform = `scale(${factor})`;
+  });
+});
+
+setTimeout(() => {
+  contenedorNotas.dispatchEvent(new Event('scroll'));
+}, 10);

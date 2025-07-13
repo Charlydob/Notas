@@ -1,47 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>Apuntes</title>
-    <link rel="stylesheet" href="styles/styles.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Apuntes</title>
+  <link rel="stylesheet" href="styles/styles.css" />
 </head>
 <body>
-    <div class="container">
+  <div class="container">
 
-    <!-- Buscador + Botón "+" -->
-    <div class="search-bar">
-        <input type="text" id="buscador" placeholder="Buscar...">
+    <!-- Centro de la pantalla: buscador + notas -->
+    <div class="zona-central">
+      <!-- Buscador y botón + -->
+      <div class="search-bar">
+        <input type="text" id="buscador" placeholder="Buscar..." />
         <button id="botonMas">＋</button>
+      </div>
+
+      <!-- Resultado de búsqueda -->
+      <p id="resultadoTexto"></p>
+
+      <!-- Lista de notas con difuminado -->
+      <div class="lista-notas" id="contenedorNotas"></div>
     </div>
 
-    <!-- Resultado de búsqueda -->
-    <p id="resultadoTexto"></p>
-
-    <!-- Lista de notas -->
-    <div id="contenedorNotas" class="lista-notas"></div>
-
-    <!-- Editor de notas (oculto por defecto) -->
+    <!-- Editor de notas -->
     <div id="editor" class="editor oculto">
-        <input type="text" id="tituloNota" placeholder="Título">
-        <textarea id="cuerpoNota" placeholder="Contenido de la nota"></textarea>
-        
-        <select id="comboTags">
-            <option>Trabajo</option>
-            <option>Personal</option>
-            <option>Ideas</option>
-            <option>Urgente</option>
-        </select>
+      <input type="text" id="tituloNota" placeholder="Título" />
+      <textarea id="cuerpoNota" placeholder="Contenido de la nota"></textarea>
 
-        <div class="botones-editor">
-            <button id="guardarNota">Guardar</button>
-            <button id="eliminarNota">Eliminar</button>
-            <button id="cancelarNota">Cancelar</button>
-        </div>
+      <select id="comboTags">
+        <option>Trabajo</option>
+        <option>Personal</option>
+        <option>Ideas</option>
+        <option>Urgente</option>
+      </select>
+      <label>Color:</label>
+<input type="color" id="colorNota" value="#ffffff">
+
+      <div class="botones-editor">
+        <button id="guardarNota">Guardar</button>
+        <button id="eliminarNota">Eliminar</button>
+        <button id="cancelarNota">Cancelar</button>
+      </div>
     </div>
 
-    </div>
-
-    <script src="scripts/app.js"></script>
+  </div>
+  <script src="scripts/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Apuntes</title>
+    <link rel="stylesheet" href="styles/styles.css"/>
+</head>
+<body>
+    <div class="container">
+
+    <!-- Buscador + Botón "+" -->
+    <div class="search-bar">
+        <input type="text" id="buscador" placeholder="Buscar...">
+        <button id="botonMas">＋</button>
+    </div>
+
+    <!-- Resultado de búsqueda -->
+    <p id="resultadoTexto"></p>
+
+    <!-- Lista de notas -->
+    <div id="contenedorNotas" class="lista-notas"></div>
+
+    <!-- Editor de notas (oculto por defecto) -->
+    <div id="editor" class="editor oculto">
+        <input type="text" id="tituloNota" placeholder="Título">
+        <textarea id="cuerpoNota" placeholder="Contenido de la nota"></textarea>
+        
+        <select id="comboTags">
+            <option>Trabajo</option>
+            <option>Personal</option>
+            <option>Ideas</option>
+            <option>Urgente</option>
+        </select>
+
+        <div class="botones-editor">
+            <button id="guardarNota">Guardar</button>
+            <button id="eliminarNota">Eliminar</button>
+            <button id="cancelarNota">Cancelar</button>
+        </div>
+    </div>
+
+    </div>
+
+    <script src="scripts/app.js"></script>
+</body>
+</html>

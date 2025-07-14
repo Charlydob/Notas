@@ -50,18 +50,26 @@ function renderizarNotas(filtro = '') {
 }
 
 function mostrarEditor(nota = null, index = null) {
+  // Ocultar elementos principales
+  buscador.classList.add('oculto-completo');
+  botonMas.classList.add('oculto-completo');
+  contenedorNotas.classList.add('oculto-completo');
+  resultadoTexto.classList.add('oculto-completo');
+
+  // Mostrar editor a pantalla completa
   editor.classList.remove('oculto');
+  editor.classList.add('fullscreen-editor');
   notaActual = index;
 
+  // Previsualización de color
   const preview = document.getElementById('colorPreview');
 
   if (nota) {
     tituloNota.value = nota.titulo;
     cuerpoNota.value = nota.contenido;
-
     const esHex = /^#[0-9A-F]{6}$/i.test(nota.color);
     colorNota.value = esHex ? nota.color : '';
-    preview.style.backgroundColor = nota.color || 'rgba(255, 255, 255, 0.07)';
+    preview.style.backgroundColor = nota.color;
   } else {
     tituloNota.value = '';
     cuerpoNota.value = '';
@@ -69,6 +77,8 @@ function mostrarEditor(nota = null, index = null) {
     preview.style.backgroundColor = 'rgba(255, 255, 255, 0.07)';
   }
 }
+
+
 colorNota.addEventListener('input', () => {
   const preview = document.getElementById('colorPreview');
   preview.style.backgroundColor = colorNota.value || 'rgba(255, 255, 255, 0.07)';
@@ -76,7 +86,16 @@ colorNota.addEventListener('input', () => {
 
 
 function cerrarEditor() {
+  // Restaurar elementos principales
+  buscador.classList.remove('oculto-completo');
+  botonMas.classList.remove('oculto-completo');
+  contenedorNotas.classList.remove('oculto-completo');
+  resultadoTexto.classList.remove('oculto-completo');
+
+  // Ocultar editor
   editor.classList.add('oculto');
+  editor.classList.remove('fullscreen-editor');
+
   notaActual = null;
 }
 
